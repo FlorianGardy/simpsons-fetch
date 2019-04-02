@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import logo from "./logo.svg";
 import "./App.css";
 import Quote from "./Quote";
 
@@ -10,7 +9,8 @@ class App extends Component {
       quote: "",
       character: "",
       image: "",
-      characterDirection: ""
+      characterDirection: "",
+      isLoading: false
     };
     this.getQuote = this.getQuote.bind(this);
     this.handleClick = this.handleClick.bind(this);
@@ -18,18 +18,24 @@ class App extends Component {
 
   getQuote() {
     fetch("https://thesimpsonsquoteapi.glitch.me/quotes")
-      .then(response => response.json()) // conversion du résultat en JSON
+      .then(response => response.json())
       .then(data => {
         this.setState({
           quote: data[0].quote,
           character: data[0].character,
           image: data[0].image,
-          characterDirection: data[0].characterDirection
+          characterDirection: data[0].characterDirection,
+          isLoading: false
         });
       });
+    this.setState({ isLoading: true });
   }
 
   handleClick() {
+    this.getQuote();
+  }
+
+  componentDidMount() {
     this.getQuote();
   }
 
