@@ -1,25 +1,46 @@
-import React, { Component } from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { Component } from "react";
+import logo from "./logo.svg";
+import "./App.css";
+import Quote from "./Quote";
 
 class App extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      quote: "",
+      character: "",
+      image: "",
+      characterDirection: ""
+    };
+    this.getQuote = this.getQuote.bind(this);
+    this.handleClick = this.handleClick.bind(this);
+  }
+
+  getQuote() {
+    fetch("https://thesimpsonsquoteapi.glitch.me/quotes")
+      .then(response => response.json()) // conversion du résultat en JSON
+      .then(data => {
+        this.setState({
+          quote: data[0].quote,
+          character: data[0].character,
+          image: data[0].image,
+          characterDirection: data[0].characterDirection
+        });
+      });
+  }
+
+  handleClick() {
+    this.getQuote();
+  }
+
   render() {
     return (
-      <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <p>
-            Edit <code>src/App.js</code> and save to reload.
-          </p>
-          <a
-            className="App-link"
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Learn React
-          </a>
-        </header>
+      <div>
+        <h1>Simpson quotes</h1>
+        <input type="button" onClick={this.handleClick} value="Click me" />
+        <div className="App">
+          <Quote {...this.state} />
+        </div>
       </div>
     );
   }
